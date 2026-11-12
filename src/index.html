@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CITY—APP</title>
+    <link rel="icon" type="image/png" href="icon.png" />
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="top-navbar">
+      <div class="brand-logo" id="logo-home">CITY</div>
+
+      <nav class="nav-menu">
+        <div class="nav-item active" data-tab="news">Новости</div>
+        <div class="nav-item" data-tab="bank">Банк</div>
+        <div class="nav-item" data-tab="med">Мед</div>
+        <div class="nav-item" data-tab="contacts">Контакты</div>
+      </nav>
+
+      <button class="sync-btn" id="refresh-btn" title="Обновить данные">
+        ↻ Обновить
+      </button>
+    </header>
+
+    <main class="main-container">
+      <div class="status-bar">
+        <div id="server-status">
+          <span class="online-dot"></span>Подключение к серверу...
+        </div>
+        <div id="last-updated"></div>
+      </div>
+
+      <!-- СЕКЦИЯ: НОВОСТИ -->
+      <section id="tab-news" class="tab-section">
+        <!-- Баннер игры (скрыт через display: none, если future-game: false) -->
+        <div id="future-game-banner" class="game-banner">
+          <div class="game-banner-info">
+            <h3>🎮 Запланирована игра</h3>
+            <p>Следующая игровая сессия в мегаполисе CITY уже назначена!</p>
+          </div>
+          <div class="game-datetime">
+            <div class="dt-pill" id="game-date-text">📅 --.--.----</div>
+            <div class="dt-pill" id="game-time-text">⏰ --:--</div>
+          </div>
+        </div>
+
+        <!-- Заглушка, если новостей нет или ошибка -->
+        <div id="news-empty-msg" class="city-card" style="display: none">
+          <h2 id="news-msg-title">Загрузка...</h2>
+          <p id="news-msg-text">Ожидание ответа от сервера CITY.</p>
+        </div>
+
+        <!-- Список карточек новостей -->
+        <div id="news-list-container" class="cards-grid"></div>
+      </section>
+
+      <!-- СЕКЦИЯ: БАНК -->
+      <section id="tab-bank" class="tab-section" style="display: none">
+        <div class="city-card">
+          <h2>💳 Городской Банк</h2>
+          <p>
+            Управление финансовыми потоками CITY. Проверка баланса лицевого
+            счета, межбанковские переводы, внутриигровые кредиты и
+            автоматические выплаты налогов.
+          </p>
+          <a
+            class="action-link"
+            href="https://serveousercontent.com"
+            target="_blank"
+            >Открыть сервис Банка на сайте ↗</a
+          >
+        </div>
+      </section>
+
+      <!-- СЕКЦИЯ: МЕД -->
+      <section id="tab-med" class="tab-section" style="display: none">
+        <div class="city-card">
+          <h2>🏥 Медицинский Департамент</h2>
+          <p>
+            Центральная система здравоохранения CITY: запись на приём,
+            закрепление за участками, медкарты жителей и экстренные службы.
+          </p>
+          <a
+            class="action-link"
+            href="https://serveousercontent.com"
+            target="_blank"
+            >Открыть сервис Мед. Департамента ↗</a
+          >
+        </div>
+      </section>
+
+      <!-- СЕКЦИЯ: КОНТАКТЫ -->
+      <section id="tab-contacts" class="tab-section" style="display: none">
+        <div class="city-card">
+          <h2>ℹ️ О проекте CITY «Игра Город»</h2>
+          <p>
+            Уникальная экосистема, симулирующая жизнь современного мегаполиса с
+            продвинутой экономической моделью и ролевым взаимодействием.
+          </p>
+          <p style="margin-top: 12px">
+            <strong>Поддержка и связь:</strong> promanenko214@gmail.com
+          </p>
+          <a class="action-link" href="mailto:promanenko214@gmail.com"
+            >Написать на почту</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <!-- Скрытый шаблон одной новости (JS просто клонирует его) -->
+    <template id="news-card-template">
+      <article class="city-card">
+        <div class="card-header">
+          <h2 class="tpl-title"></h2>
+          <div class="card-meta">
+            <span class="card-date tpl-date"></span>
+            <span class="card-id tpl-id"></span>
+          </div>
+        </div>
+        <p class="tpl-text"></p>
+      </article>
+    </template>
+    <script src="main.js" type="module"></script>
+  </body>
+</html>
+
+  </body>
+</html>
