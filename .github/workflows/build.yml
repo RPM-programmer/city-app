@@ -1,4 +1,4 @@
-name: Build CITY (Windows & Android)
+name: Build CITY Patch (Windows & Light Android)
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
       - run: npm run tauri build
       - uses: actions/upload-artifact@v4
         with:
-          name: CITY-Windows-Setup
+          name: CITY-Windows-Setup-v0.1.1
           path: src-tauri/target/release/bundle/nsis/*.exe
 
   build-android:
@@ -30,19 +30,27 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: android-actions/setup-android@v3
-      - name: Install Android NDK
-        run: sdkmanager "ndk;26.3.11579264"
+      # Только 64-битные смартфоны (уменьшает размер APK в 3 раза)
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+          targets: aarch64-linux-android
       - run: npm install
-      - run: npm run tauri android init
-      - name: Build APK
+      - name: Build Light Release APK
         env:
-          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/26.3.11579264
-        run: npm run tauri android build -- --apk --debug
+          ANDROID_HOME: /usr/local/lib/android/sdk
+        run: |
+          export NDK_HOME=$(ls -d /usr/local/lib/android/sdk/ndk/* | tail -n 1)
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          npm run tauri android init
+          # Релизная сжатая сборка без --debug
+          npm run tauri android build -- --apk --target aarch64
+
+          # Автоматическая подпись APK для установки на телефон
+          keytool -genkey -v -keystore release.keystore -alias city -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=CITY, OU=Dev, O=CITY, L=City, S=State, C=RU"
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | tail -n 1)
+          UNSIGNED_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" | head -n 1)
+          $BUILD_TOOLS/apksigner sign --ks release.keystore --ks-pass pass:123456 --key-pass pass:123456 --out CITY-v0.1.1-light.apk "$UNSIGNED_APK"
       - uses: actions/upload-artifact@v4
         with:
-          name: CITY-Android-APK
-          path: src-tauri/gen/android/app/build/outputs/apk/universal/debug/*.apk
+          name: CITY-Android-APK-Light-v0.1.1
+          path: CITY-v0.1.1-light.apk
